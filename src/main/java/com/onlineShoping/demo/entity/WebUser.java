@@ -1,8 +1,9 @@
 package com.onlineShoping.demo.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.onlineShoping.demo.util.UserState;
 
@@ -10,19 +11,32 @@ import com.onlineShoping.demo.util.UserState;
 public class WebUser {
 
 	@Id
-	@Field(name = "loginId")
-	private String loginId;
+	private String id;
+
+	@Indexed(name = "userIdIndx", unique = true)
+	private String userId;
 
 	private String password;
 
 	private UserState state;
 
-	public String getLoginId() {
-		return loginId;
+	@DBRef
+	private ShopingCart cart;
+
+	public String getId() {
+		return id;
 	}
 
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getPassword() {
@@ -39,6 +53,19 @@ public class WebUser {
 
 	public void setState(UserState state) {
 		this.state = state;
+	}
+
+	public ShopingCart getCart() {
+		return cart;
+	}
+
+	public void setCart(ShopingCart cart) {
+		this.cart = cart;
+	}
+
+	public WebUser(String userId, String password) {
+		this.userId = userId;
+		this.password = password;
 	}
 
 }

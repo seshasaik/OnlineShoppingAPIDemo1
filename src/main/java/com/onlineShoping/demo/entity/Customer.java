@@ -1,6 +1,8 @@
 package com.onlineShoping.demo.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -13,10 +15,19 @@ public class Customer {
 	private String id;
 	private String address;
 	private String phone;
+
+	@Indexed(unique = true, name = "emailIndx")
 	private String email;
 
 	@DBRef
-	private WebUser user;
+	private Account account;
+
+	public Customer(String address, String phone, String email, Account account) {
+		this.address = address;
+		this.phone = phone;
+		this.email = email;
+		this.account = account;
+	}
 
 	public String getId() {
 		return id;
