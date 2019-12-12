@@ -1,5 +1,7 @@
 package com.onlineShoping.demo.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.onlineShoping.demo.entity.Customer;
 import com.onlineShoping.demo.entity.WebUser;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
+import com.onlineShoping.demo.exceptions.InvalidCredentialException;
+import com.onlineShoping.demo.exceptions.UserNotFoundException;
 import com.onlineShoping.demo.model.User;
 import com.onlineShoping.demo.repository.WebUserRepository;
 import com.onlineShoping.demo.util.UserState;
@@ -22,9 +26,17 @@ public class UserServiceImpl implements UserService {
 	CustomerService customerService;
 
 	@Override
-	public WebUser findUser(WebUser webUser) {
+	public WebUser findUser(User webUser) {
 		// TODO Auto-generated method stub
-		return null;
+		WebUser user = Optional.ofNullable(webUserRepository.findByUserId(webUser.getLoginId())).orElseThrow(() -> {
+			return new UserNotFoundException(String.format("User not foud with given id: %1$s", webUser.getLoginId()));
+		});
+
+		if (!user.getPassword().equals(webUser.getPassword())) {
+			throw new InvalidCredentialException("Invalid password");
+		}
+
+		return user;
 	}
 
 	@Override

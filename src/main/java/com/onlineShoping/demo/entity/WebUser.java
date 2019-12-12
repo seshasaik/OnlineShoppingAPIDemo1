@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.onlineShoping.demo.util.UserState;
 
 @Document(collection = "webUser")
@@ -16,6 +17,7 @@ public class WebUser {
 	@Indexed(name = "userIdIndx", unique = true)
 	private String userId;
 
+	@JsonIgnore
 	private String password;
 
 	private UserState state;

@@ -1,5 +1,7 @@
 package com.onlineShoping.demo.entity;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,8 +10,8 @@ public class Product {
 
 	@Id
 	private String id;
-	private String name;
-	private Supplier supplier;
+	private String name;	
+	private List<Supplier> suppliers;
 
 	public String getId() {
 		return id;
@@ -27,12 +29,14 @@ public class Product {
 		this.name = name;
 	}
 
-	public Supplier getSupplier() {
-		return supplier;
+	public List<Supplier> getSuppliers() {
+		return suppliers;
 	}
 
-	public void setSupplier(Supplier supplier) {
-		this.supplier = supplier;
+	public void setSuppliers(List<Supplier> suppliers) {
+		this.suppliers = suppliers;
 	}
+
+	
 
 }

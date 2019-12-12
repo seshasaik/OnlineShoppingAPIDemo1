@@ -7,7 +7,7 @@ import com.onlineShoping.demo.util.UserState;
 
 public interface UserService {
 
-	WebUser findUser(WebUser webUser);
+	WebUser findUser(User webUser);
 
 	void createUser(User user) throws Exception;
 
