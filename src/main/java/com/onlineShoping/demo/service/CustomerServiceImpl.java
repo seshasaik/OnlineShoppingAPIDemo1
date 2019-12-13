@@ -12,6 +12,7 @@ import com.onlineShoping.demo.entity.Order;
 import com.onlineShoping.demo.entity.Payment;
 import com.onlineShoping.demo.entity.ShopingCart;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
+import com.onlineShoping.demo.exceptions.CustomerNotFoundException;
 import com.onlineShoping.demo.repository.CustomerRepository;
 
 @Service
@@ -36,15 +37,19 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = { CustomerNotFoundException.class })
 	public void updateCustomer(Customer customer) {
 		// TODO Auto-generated method stub
-
+		this.findById(customer.getId());
+		customerRepository.save(customer);
 	}
 
 	@Override
 	public Customer findById(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return customerRepository.findById(id).orElseThrow(() -> {
+			return new CustomerNotFoundException(String.format("Customer not found with given id : %1$s", id));
+		});
 	}
 
 	@Override
@@ -63,6 +68,12 @@ public class CustomerServiceImpl implements CustomerService {
 	public ShopingCart getShopingCart(String customerId) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Customer> findAllCustomers() {
+		// TODO Auto-generated method stub
+		return customerRepository.findAll();
 	}
 
 }

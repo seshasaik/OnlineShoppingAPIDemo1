@@ -15,6 +15,8 @@ public interface CustomerService {
 	void updateCustomer(Customer customer);
 
 	Customer findById(String id);
+	
+	List<Customer> findAllCustomers();
 
 	List<Order> getOrdersByAccount(String cutomerId);
 

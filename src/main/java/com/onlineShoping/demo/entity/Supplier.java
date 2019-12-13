@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "product")
 public class Supplier {
 
+	private String regNumber;
 	private String name;
 	private String phone;
 	private String mobile;
@@ -40,6 +41,27 @@ public class Supplier {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getRegNumber() {
+		return regNumber;
+	}
+
+	public void setRegNumber(String regNumber) {
+		this.regNumber = regNumber;
+	}
+
+	@Override
+	public String toString() {
+		return "Supplier [regNumber = " + regNumber + ", name=" + name + ", phone=" + phone + ", mobile=" + mobile
+				+ ", address=" + address + "]";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		Supplier other = (Supplier) obj;
+		return this.regNumber.equals(other.getRegNumber());
 	}
 
 }

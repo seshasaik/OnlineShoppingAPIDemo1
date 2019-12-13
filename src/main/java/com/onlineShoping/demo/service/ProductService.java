@@ -17,8 +17,8 @@ public interface ProductService {
 
 	Product findById(String id);
 
-	void addSupplierToProduct(String id, Supplier supplier);
+	Product addSupplierToProduct(String id, Supplier supplier);
 
-	void removeSupplierFromProduct(String id, Supplier supplier);
+	Product removeSupplierFromProduct(String id, Supplier supplier);
 
 }

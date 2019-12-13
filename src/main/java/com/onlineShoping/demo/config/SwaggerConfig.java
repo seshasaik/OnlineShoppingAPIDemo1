@@ -20,9 +20,10 @@ public class SwaggerConfig {
 	@Bean
 	public Docket docket() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiEndPointsInfo()).select()
-				// .apis(RequestHandlerSelectors.basePackage("com.onlineShoping.demo.controller"))
-				.apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework")))
-				.paths(Predicates.not(PathSelectors.regex("/error.*"))).build();
+				 .apis(RequestHandlerSelectors.basePackage("com.onlineShoping.demo.controller"))
+//				.apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework")))
+//				.paths(Predicates.not(PathSelectors.regex("/error.*")))
+				.build();
 	}
 
 	private ApiInfo apiEndPointsInfo() {

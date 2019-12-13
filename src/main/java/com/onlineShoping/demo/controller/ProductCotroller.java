@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlineShoping.demo.entity.Product;
 import com.onlineShoping.demo.entity.Supplier;
 import com.onlineShoping.demo.exceptions.ProductNotFoundException;
+import com.onlineShoping.demo.exceptions.SupplierAlreadyExistedException;
+import com.onlineShoping.demo.exceptions.SupplierNotFoundException;
 import com.onlineShoping.demo.service.ProductService;
 
 @RestController
@@ -57,14 +59,17 @@ public class ProductCotroller {
 
 	@PostMapping(path = "/{productId}/supplier")
 	public ResponseEntity<String> addSupplier(@RequestBody Supplier supplier, @PathVariable String productId) {
-		return new ResponseEntity<String>(String.format("Supplier %1$s added to product %2$s successfully", "", ""),
-				HttpStatus.OK);
+
+		Product product = productService.addSupplierToProduct(productId, supplier);
+		return new ResponseEntity<String>(String.format("Supplier %1$s added to product %2$s successfully",
+				supplier.getName(), product.getName()), HttpStatus.OK);
 	}
 
 	@DeleteMapping(path = "/{productId}/supplier")
 	public ResponseEntity<String> removeSupplier(@RequestBody Supplier supplier, @PathVariable String productId) {
-		return new ResponseEntity<String>(String.format("Supplier %1$s removed from product %2$s successfully", "", ""),
-				HttpStatus.OK);
+		Product product = productService.removeSupplierFromProduct(productId, supplier);
+		return new ResponseEntity<String>(String.format("Supplier %1$s removed from product %2$s successfully",
+				supplier.getName(), product.getName()), HttpStatus.OK);
 	}
 
 	@ExceptionHandler
@@ -72,4 +77,13 @@ public class ProductCotroller {
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler
+	public ResponseEntity<String> supplierAlreadyExistedExceptionHandler(SupplierAlreadyExistedException e) {
+		return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<String> supplierNotFoundExceptionHandler(SupplierNotFoundException e) {
+		return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+	}
 }
