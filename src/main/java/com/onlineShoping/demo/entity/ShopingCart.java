@@ -1,30 +1,14 @@
 package com.onlineShoping.demo.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
 public class ShopingCart {
-
-	@Id
-	private String cartId;
 
 	private LocalDate created;
 
-	@DBRef
-	private List<LineItem> items;
-
-	public String getCartId() {
-		return cartId;
-	}
-
-	public void setCartId(String cartId) {
-		this.cartId = cartId;
-	}
+	private List<LineItem> items = new ArrayList<>();
 
 	public LocalDate getCreated() {
 		return created;

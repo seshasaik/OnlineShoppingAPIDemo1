@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.onlineShoping.demo.util.UserState;
@@ -18,12 +19,13 @@ public class WebUser {
 	private String userId;
 
 	@JsonIgnore
+	@Field(name = "pwd")
 	private String password;
 
 	private UserState state;
 
-	@DBRef
-	private ShopingCart cart;
+	@DBRef(lazy = true)
+	private Customer customer;
 
 	public String getId() {
 		return id;
@@ -57,17 +59,17 @@ public class WebUser {
 		this.state = state;
 	}
 
-	public ShopingCart getCart() {
-		return cart;
-	}
-
-	public void setCart(ShopingCart cart) {
-		this.cart = cart;
-	}
-
 	public WebUser(String userId, String password) {
 		this.userId = userId;
 		this.password = password;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 }

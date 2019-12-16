@@ -1,7 +1,6 @@
 package com.onlineShoping.demo.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Customer {
 
 	@Id
-	@Field(name = "customerId")
 	private String id;
 	private String address;
 	private String phone;
@@ -59,6 +57,14 @@ public class Customer {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 }

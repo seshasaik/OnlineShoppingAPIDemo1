@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import com.onlineShoping.demo.util.OrderStatus;
 
@@ -18,10 +19,9 @@ public class Order {
 	private OrderStatus status;
 	private Double total;
 
-	@DBRef
 	private List<LineItem> items;
 
-	@DBRef
+	@DBRef(lazy = true)
 	private List<Payment> payments;
 
 	public String getNumber() {

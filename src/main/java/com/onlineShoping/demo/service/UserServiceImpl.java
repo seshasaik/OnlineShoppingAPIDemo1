@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.onlineShoping.demo.entity.Account;
 import com.onlineShoping.demo.entity.Customer;
 import com.onlineShoping.demo.entity.WebUser;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
@@ -53,9 +54,11 @@ public class UserServiceImpl implements UserService {
 			throw new IllegalArgumentException(
 					String.format("User is alredy existed with given user id :%1$s", user.getLoginId()));
 		}
-		Customer customer = new Customer(user.getAddress(), user.getPhone(), user.getEmail(), null);
+		Account account = new Account();
+		account.setBillingAddress(user.getBillingAddress());
+		Customer customer = new Customer(user.getAddress(), user.getPhone(), user.getEmail(), account);
 		customer = customerService.saveCustomer(customer);
-
+		webUser.setCustomer(customer);
 		webUserRepository.save(webUser);
 
 	}

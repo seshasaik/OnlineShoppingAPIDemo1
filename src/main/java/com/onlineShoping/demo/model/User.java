@@ -14,6 +14,8 @@ public class User {
 
 	private String email;
 
+	private String billingAddress;
+
 	public String getLoginId() {
 		return loginId;
 	}
@@ -60,6 +62,14 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(String billingAddress) {
+		this.billingAddress = billingAddress;
 	}
 
 }

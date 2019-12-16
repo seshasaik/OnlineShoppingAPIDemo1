@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.onlineShoping.demo.entity.Account;
 import com.onlineShoping.demo.entity.Customer;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
+import com.onlineShoping.demo.model.User;
 import com.onlineShoping.demo.service.CustomerService;
 
 @RestController
@@ -31,9 +33,11 @@ public class CustomerController {
 	}
 
 	@PostMapping
-	public ResponseEntity<String> createCustomer(@RequestBody Customer customer)
-			throws CustomerAlreadyExistedException {
-		customerService.saveCustomer(customer);
+	public ResponseEntity<String> createCustomer(@RequestBody User user) throws CustomerAlreadyExistedException {
+		Account account = new Account();
+		account.setBillingAddress(user.getBillingAddress());
+		Customer customer = new Customer(user.getAddress(), user.getPhone(), user.getEmail(), account);
+		customer = customerService.saveCustomer(customer);
 		return new ResponseEntity<String>("Customer created successfully", HttpStatus.OK);
 
 	}

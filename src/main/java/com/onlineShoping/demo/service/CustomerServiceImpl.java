@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.onlineShoping.demo.entity.Account;
 import com.onlineShoping.demo.entity.Customer;
 import com.onlineShoping.demo.entity.Order;
 import com.onlineShoping.demo.entity.Payment;
@@ -22,6 +23,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	CustomerRepository customerRepository;
 
+	@Autowired
+	AccountService accountService;
+
 	@Override
 	@Transactional(rollbackFor = { CustomerAlreadyExistedException.class })
 	public Customer saveCustomer(Customer customer) throws CustomerAlreadyExistedException {
@@ -33,6 +37,8 @@ public class CustomerServiceImpl implements CustomerService {
 					String.format("Customer with the given email : %1$s is already existed", customer.getEmail()));
 		}
 
+		Account account = accountService.createAccount(customer.getAccount());
+		customer.setAccount(account);
 		return customerRepository.save(customer);
 	}
 

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
@@ -15,6 +16,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 @Configuration
+@EnableMongoRepositories(basePackages = "com.onlineShoping.demo")
 public class MongoDBCustomConfig extends AbstractMongoClientConfiguration {
 
 	@Value("${spring.data.mongodb.database}")

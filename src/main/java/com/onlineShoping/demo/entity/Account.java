@@ -1,6 +1,7 @@
 package com.onlineShoping.demo.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -8,25 +9,21 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document
+@Document(collection = "accounts")
 public class Account {
 
 	@Id
-	@Field(name = "accountId")
+//	@Field(name = "accountId")
 	private String id;
 	private String billingAddress;
 	private Boolean accountClosed;
 	private LocalDate Open;
 	private LocalDate closed;
 
-	@DBRef
 	private ShopingCart cart;
 
 	@DBRef
-	private List<Order> orders;
-
-	@DBRef
-	private List<Payment> payments;
+	private List<Order> orders = new ArrayList<>();
 
 	public String getId() {
 		return id;
@@ -84,12 +81,7 @@ public class Account {
 		this.orders = orders;
 	}
 
-	public List<Payment> getPayments() {
-		return payments;
-	}
-
-	public void setPayments(List<Payment> payments) {
-		this.payments = payments;
+	public Account() {
 	}
 
 }

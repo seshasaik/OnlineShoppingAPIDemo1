@@ -10,7 +10,8 @@ public class Product {
 
 	@Id
 	private String id;
-	private String name;	
+	private String name;
+	private String mrp;
 	private List<Supplier> suppliers;
 
 	public String getId() {
@@ -37,6 +38,12 @@ public class Product {
 		this.suppliers = suppliers;
 	}
 
-	
+	public String getMrp() {
+		return mrp;
+	}
+
+	public void setMrp(String mrp) {
+		this.mrp = mrp;
+	}
 
 }

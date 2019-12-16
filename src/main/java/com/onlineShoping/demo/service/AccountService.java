@@ -4,7 +4,7 @@ import com.onlineShoping.demo.entity.Account;
 
 public interface AccountService {
 
-	void createAccount(Account account);
+	Account createAccount(Account account);
 
 	void findAccountById(String id);
 

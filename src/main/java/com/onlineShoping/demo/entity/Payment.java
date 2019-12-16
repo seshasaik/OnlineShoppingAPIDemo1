@@ -3,6 +3,7 @@ package com.onlineShoping.demo.entity;
 import java.time.LocalDate;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -13,6 +14,9 @@ public class Payment {
 	private LocalDate paid;
 	private Double total;
 	private String details;
+
+	@DBRef(lazy = true)
+	private Account account;
 
 	public String getId() {
 		return id;
