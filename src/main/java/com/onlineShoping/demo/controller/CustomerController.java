@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.onlineShoping.demo.entity.Customer;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
 import com.onlineShoping.demo.model.User;
 import com.onlineShoping.demo.service.CustomerService;
+import com.onlineShoping.demo.util.UserState;
 
 @RestController
 @RequestMapping(path = "/customer")
@@ -32,11 +34,35 @@ public class CustomerController {
 		return customerService.findAllCustomers();
 	}
 
+	@PostMapping(path = { "/login" })
+	public Customer getCustomersByUserId(@RequestBody User user) {
+		Customer customer = customerService.findByEmail(user.getEmail());
+		return customer;
+	}
+
+	
+	@PostMapping(path = { "/search" })
+	public Customer searchCustomer(@RequestBody User user) {
+		Customer customer = customerService.findByEmail(user.getEmail());
+		return customer;
+	}
+	
 	@PostMapping
 	public ResponseEntity<String> createCustomer(@RequestBody User user) throws CustomerAlreadyExistedException {
 		Account account = new Account();
 		account.setBillingAddress(user.getBillingAddress());
-		Customer customer = new Customer(user.getAddress(), user.getPhone(), user.getEmail(), account);
+		Customer customer = new Customer();
+		customer.setAddress(user.getAddress());
+		customer.setAccount(account);
+		customer.setPhone(user.getPhone());
+		customer.setEmail(user.getEmail());
+		if (user.isSelfRegistration() && StringUtils.hasText(user.getPassword())) {
+			customer.setPassword(user.getPassword());
+			customer.setState(UserState.Active);
+		} else {
+			if (user.isSelfRegistration())
+				return new ResponseEntity<String>("Password should not be empty", HttpStatus.BAD_REQUEST);
+		}
 		customer = customerService.saveCustomer(customer);
 		return new ResponseEntity<String>("Customer created successfully", HttpStatus.OK);
 

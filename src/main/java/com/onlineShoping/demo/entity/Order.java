@@ -21,7 +21,6 @@ public class Order {
 
 	private List<LineItem> items;
 
-	@DBRef(lazy = true)
 	private List<Payment> payments;
 
 	public String getNumber() {

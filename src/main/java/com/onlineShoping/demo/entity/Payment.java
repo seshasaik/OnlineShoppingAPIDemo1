@@ -6,18 +6,16 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
+
 public class Payment {
 
-	@Id
+	
 	private String id;
 	private LocalDate paid;
 	private Double total;
 	private String details;
 
-	@DBRef(lazy = true)
-	private Account account;
-
+	
 	public String getId() {
 		return id;
 	}

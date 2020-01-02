@@ -7,6 +7,7 @@ import com.onlineShoping.demo.entity.Order;
 import com.onlineShoping.demo.entity.Payment;
 import com.onlineShoping.demo.entity.ShopingCart;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
+import com.onlineShoping.demo.model.User;
 
 public interface CustomerService {
 
@@ -14,8 +15,10 @@ public interface CustomerService {
 
 	void updateCustomer(Customer customer);
 
-	Customer findById(String id);
-	
+	Customer findByCustomerId(String id);
+
+	Customer findByEmail(String email);
+
 	List<Customer> findAllCustomers();
 
 	List<Order> getOrdersByAccount(String cutomerId);
@@ -23,5 +26,7 @@ public interface CustomerService {
 	List<Payment> getPayments(String cutomerId);
 
 	ShopingCart getShopingCart(String customerId);
+
+	List<Customer> searchCustomer(User user);
 
 }

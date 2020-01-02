@@ -14,6 +14,8 @@ import com.onlineShoping.demo.entity.Payment;
 import com.onlineShoping.demo.entity.ShopingCart;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
 import com.onlineShoping.demo.exceptions.CustomerNotFoundException;
+import com.onlineShoping.demo.exceptions.UserNotFoundException;
+import com.onlineShoping.demo.model.User;
 import com.onlineShoping.demo.repository.CustomerRepository;
 
 @Service
@@ -30,8 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = { CustomerAlreadyExistedException.class })
 	public Customer saveCustomer(Customer customer) throws CustomerAlreadyExistedException {
 		// TODO Auto-generated method stub
-		Optional<Customer> customerWithSameEmail = Optional
-				.ofNullable(customerRepository.findByEmail(customer.getEmail()));
+		Optional<Customer> customerWithSameEmail = customerRepository.findByEmail(customer.getEmail());
 		if (customerWithSameEmail.isPresent()) {
 			throw new CustomerAlreadyExistedException(
 					String.format("Customer with the given email : %1$s is already existed", customer.getEmail()));
@@ -42,16 +43,15 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.save(customer);
 	}
 
-	@Override
-	@Transactional(rollbackFor = { CustomerNotFoundException.class })
+	@Override	
 	public void updateCustomer(Customer customer) {
 		// TODO Auto-generated method stub
-		this.findById(customer.getId());
+		this.findByCustomerId(customer.getCustomerId());
 		customerRepository.save(customer);
 	}
 
 	@Override
-	public Customer findById(String id) {
+	public Customer findByCustomerId(String id) {
 		// TODO Auto-generated method stub
 		return customerRepository.findById(id).orElseThrow(() -> {
 			return new CustomerNotFoundException(String.format("Customer not found with given id : %1$s", id));
@@ -73,13 +73,28 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public ShopingCart getShopingCart(String customerId) {
 		// TODO Auto-generated method stub
-		return null;
+		return findByCustomerId(customerId).getAccount().getCart();
 	}
 
 	@Override
 	public List<Customer> findAllCustomers() {
 		// TODO Auto-generated method stub
 		return customerRepository.findAll();
+	}
+
+	@Override
+	public Customer findByEmail(String email) {
+		// TODO Auto-generated method stub
+		return customerRepository.findByEmail(email).orElseThrow(() -> {
+			return new CustomerNotFoundException(String.format("Customer not found with given email : %1$s", email));
+		});
+	}
+
+	@Override
+	public List<Customer> searchCustomer(User user) {
+		// TODO Auto-generated method stub
+
+		return customerRepository.findByPhoneOrEmail(user.getPhone(), user.getEmail(), null);
 	}
 
 }

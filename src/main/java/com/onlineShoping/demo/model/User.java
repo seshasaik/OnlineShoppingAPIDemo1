@@ -15,6 +15,8 @@ public class User {
 	private String email;
 
 	private String billingAddress;
+	
+	private boolean selfRegistration;
 
 	public String getLoginId() {
 		return loginId;
@@ -70,6 +72,14 @@ public class User {
 
 	public void setBillingAddress(String billingAddress) {
 		this.billingAddress = billingAddress;
+	}
+
+	public boolean isSelfRegistration() {
+		return selfRegistration;
+	}
+
+	public void setSelfRegistration(boolean selfRegistration) {
+		this.selfRegistration = selfRegistration;
 	}
 
 }
