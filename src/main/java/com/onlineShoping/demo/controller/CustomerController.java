@@ -58,7 +58,7 @@ public class CustomerController {
 		customer.setEmail(user.getEmail());
 		if (user.isSelfRegistration() && StringUtils.hasText(user.getPassword())) {
 			customer.setPassword(user.getPassword());
-			customer.setState(UserState.Active);
+			customer.setState(UserState.ACTIVE);
 		} else {
 			if (user.isSelfRegistration())
 				return new ResponseEntity<String>("Password should not be empty", HttpStatus.BAD_REQUEST);
