@@ -33,6 +33,12 @@ public class CustomerController {
 	public List<Customer> getCustomers() {
 		return customerService.findAllCustomers();
 	}
+	
+	@GetMapping(path = "/{customerId}")
+	public Customer findCustomerById(@PathVariable String customerId) {
+		return customerService.findByCustomerId(customerId);	
+	}
+
 
 	@PostMapping(path = { "/login" })
 	public Customer getCustomersByUserId(@RequestBody User user) {
@@ -56,6 +62,10 @@ public class CustomerController {
 		customer.setAccount(account);
 		customer.setPhone(user.getPhone());
 		customer.setEmail(user.getEmail());
+		customer.setFirstName(user.getFirstName());
+		customer.setLastName(user.getLastName());
+		customer.setMiddelName(user.getMiddelName());
+		customer.setGender(user.getGender());
 		if (user.isSelfRegistration() && StringUtils.hasText(user.getPassword())) {
 			customer.setPassword(user.getPassword());
 			customer.setState(UserState.ACTIVE);
