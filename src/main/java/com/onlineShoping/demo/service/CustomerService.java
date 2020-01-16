@@ -20,6 +20,8 @@ public interface CustomerService  {
 	Customer findByCustomerId(String id);
 
 	Customer findByEmail(String email);
+	
+	Customer findByPhone(String phone);
 
 	List<Customer> findAllCustomers();
 

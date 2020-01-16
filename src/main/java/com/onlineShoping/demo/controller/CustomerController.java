@@ -66,13 +66,13 @@ public class CustomerController {
 		customer.setLastName(user.getLastName());
 		customer.setMiddelName(user.getMiddelName());
 		customer.setGender(user.getGender());
-		if (user.isSelfRegistration() && StringUtils.hasText(user.getPassword())) {
-			customer.setPassword(user.getPassword());
-			customer.setState(UserState.ACTIVE);
-		} else {
-			if (user.isSelfRegistration())
-				return new ResponseEntity<String>("Password should not be empty", HttpStatus.BAD_REQUEST);
-		}
+//		if (user.isSelfRegistration() && StringUtils.hasText(user.getPassword())) {
+//			customer.setPassword(user.getPassword());
+//			customer.setState(UserState.ACTIVE);
+//		} else {
+//			if (user.isSelfRegistration())
+//				return new ResponseEntity<String>("Password should not be empty", HttpStatus.BAD_REQUEST);
+//		}
 		customer = customerService.saveCustomer(customer);
 		return new ResponseEntity<String>("Customer created successfully", HttpStatus.OK);
 

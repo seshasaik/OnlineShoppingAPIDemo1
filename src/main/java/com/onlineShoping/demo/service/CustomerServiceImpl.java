@@ -1,11 +1,9 @@
 package com.onlineShoping.demo.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +14,6 @@ import com.onlineShoping.demo.entity.Payment;
 import com.onlineShoping.demo.entity.ShopingCart;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
 import com.onlineShoping.demo.exceptions.CustomerNotFoundException;
-import com.onlineShoping.demo.exceptions.UserNotFoundException;
 import com.onlineShoping.demo.model.User;
 import com.onlineShoping.demo.repository.CustomerRepository;
 
@@ -30,22 +27,60 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	AccountService accountService;
 
+	private final String EMAIL_EXISTED_MSG = "Email \'%1$s\' is alreday existed, please try with another one";
+	private final String MOBIL_EXISTED_MSG = "Mobile \'%1$s\' is alreday existed, please try with another one";
+	private final String CUSTOMER_NOT_FOUND_MSG = "Customer not found with given %1$s : %2$s";
+
 	@Override
-	@Transactional(rollbackFor = { CustomerAlreadyExistedException.class })
-	public Customer saveCustomer(Customer customer) throws CustomerAlreadyExistedException {
+	@Transactional(rollbackFor = {CustomerAlreadyExistedException.class})
+	public Customer saveCustomer(Customer customer)
+			throws CustomerAlreadyExistedException {
 		// TODO Auto-generated method stub
-		Optional<Customer> customerWithSameEmail = customerRepository.findByEmail(customer.getEmail());
-		if (customerWithSameEmail.isPresent()) {
+
+		Customer existedCustomerWithEmail = null;
+		Customer existedCustomerWithMobile = null;
+		try {
+			existedCustomerWithEmail = this.findByEmail(customer.getEmail());
+		} catch (CustomerNotFoundException e) {
+			// TODO: handle exception
+		}
+		if (Objects.isNull(existedCustomerWithEmail)) {
+
+			// Check for customer by given mobile nos
+			try {
+				existedCustomerWithMobile = this
+						.findByPhone(customer.getPhone());
+			} catch (CustomerNotFoundException e) {
+				// TODO: handle exception
+			}
+
+			if (Objects.isNull(existedCustomerWithMobile)) {
+				Account account = new Account();
+				account.setBillingAddress(customer.getAddress());
+				customer.setAccount(accountService.createAccount(account));
+				return customerRepository.save(customer);
+
+			} else {
+				throw new CustomerAlreadyExistedException(
+						String.format(MOBIL_EXISTED_MSG, customer.getPhone()));
+			}
+
+		} else {
 			throw new CustomerAlreadyExistedException(
-					String.format("Customer with the given email : %1$s is already existed", customer.getEmail()));
+					String.format(EMAIL_EXISTED_MSG, customer.getEmail()));
 		}
 
-		Account account = accountService.createAccount(customer.getAccount());
-		customer.setAccount(account);
-		return customerRepository.save(customer);
+		// Optional<Customer> customerWithSameEmail =
+		// customerRepository.findByEmail(customer.getEmail());
+		// if (customerWithSameEmail.isPresent()) {
+		// throw new CustomerAlreadyExistedException(
+		// String.format("Customer with the given email : %1$s is already
+		// existed", customer.getEmail()));
+		// }
+
 	}
 
-	@Override	
+	@Override
 	public void updateCustomer(Customer customer) {
 		// TODO Auto-generated method stub
 		this.findByCustomerId(customer.getCustomerId());
@@ -56,7 +91,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer findByCustomerId(String id) {
 		// TODO Auto-generated method stub
 		return customerRepository.findById(id).orElseThrow(() -> {
-			return new CustomerNotFoundException(String.format("Customer not found with given id : %1$s", id));
+			return new CustomerNotFoundException(String
+					.format("Customer not found with given id : %1$s", id));
 		});
 	}
 
@@ -88,7 +124,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer findByEmail(String email) {
 		// TODO Auto-generated method stub
 		return customerRepository.findByEmail(email).orElseThrow(() -> {
-			return new CustomerNotFoundException(String.format("Customer not found with given email : %1$s", email));
+			return new CustomerNotFoundException(
+					String.format(CUSTOMER_NOT_FOUND_MSG, "email", email));
 		});
 	}
 
@@ -96,9 +133,17 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<Customer> searchCustomer(User user) {
 		// TODO Auto-generated method stub
 
-		return customerRepository.findByPhoneOrEmail(user.getPhone(), user.getEmail(), null);
+		return customerRepository.findByPhoneOrEmail(user.getPhone(),
+				user.getEmail(), null);
 	}
 
-
+	@Override
+	public Customer findByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return customerRepository.findByPhone(phone).orElseThrow(() -> {
+			return new CustomerNotFoundException(
+					String.format(CUSTOMER_NOT_FOUND_MSG, "mobile", phone));
+		});
+	}
 
 }

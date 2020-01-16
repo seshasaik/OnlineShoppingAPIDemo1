@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,13 +21,16 @@ public class Users implements UserDetails {
 	 */
 	private static final long serialVersionUID = -1576836530686554766L;
 	@Id
-//	@Field(name = "accountId")
+	// @Field(name = "accountId")
 	private String id;
 	private String userName;
 	private String password;
 	private UserState state;
 
 	private List<Roles> roles;
+
+	@DBRef(lazy = true)
+	private Customer customer;
 
 	public Users() {
 		// TODO Auto-generated constructor stub
@@ -105,5 +109,14 @@ public class Users implements UserDetails {
 		// TODO Auto-generated method stub
 		return this.state.equals(UserState.ACTIVE);
 	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 
 }

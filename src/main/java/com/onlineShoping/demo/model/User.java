@@ -4,7 +4,7 @@ import com.onlineShoping.demo.util.CustomerGender;
 
 public class User {
 
-	private String loginId;
+	private String userName;
 
 	private String password;
 
@@ -24,12 +24,14 @@ public class User {
 
 	private boolean selfRegistration;
 
-	public String getLoginId() {
-		return loginId;
+	
+
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPassword() {

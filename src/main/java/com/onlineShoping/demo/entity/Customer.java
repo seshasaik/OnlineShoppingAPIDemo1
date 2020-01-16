@@ -24,20 +24,16 @@ public class Customer {
 	@Indexed(unique = true, name = "emailIndx")
 	private String email;
 
-	@JsonIgnore
-	private String password;
-
-	private UserState state;
-
 	@DBRef
 	private Account account;
 
-//	public Customer(String address, String phone, String email, Account account) {
-//		this.address = address;
-//		this.phone = phone;
-//		this.email = email;
-//		this.account = account;
-//	}
+	// public Customer(String address, String phone, String email, Account
+	// account) {
+	// this.address = address;
+	// this.phone = phone;
+	// this.email = email;
+	// this.account = account;
+	// }
 
 	public String getCustomerId() {
 		return customerId;
@@ -82,22 +78,6 @@ public class Customer {
 		this.account = account;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public UserState getState() {
-		return state;
-	}
-
-	public void setState(UserState state) {
-		this.state = state;
-	}
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -130,7 +110,4 @@ public class Customer {
 		this.gender = gender;
 	}
 
-	
-
-	
 }
