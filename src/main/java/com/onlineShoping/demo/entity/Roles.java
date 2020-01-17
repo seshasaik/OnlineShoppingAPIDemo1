@@ -9,7 +9,7 @@ import com.onlineShoping.demo.util.UserRole;
  * @author kseshasai
  *
  */
-@Document(collection = "users")
+@Document(collection = "roles")
 public class Roles {
 
 	@Id

@@ -30,8 +30,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired
 	UserService customUserDetailService;
 
-	
-	
 	@Autowired
 	JwtRequestFilter jwtRequestFilter;
 
@@ -40,9 +38,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// TODO Auto-generated method stub
+
 		// @formatter:off
-//		super.configure(http);
+		//super.configure(http);
 		http
 		.cors().configurationSource(corsConfigurationSource()).and()
 		.csrf().disable()

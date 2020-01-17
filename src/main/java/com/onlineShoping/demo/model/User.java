@@ -1,5 +1,8 @@
 package com.onlineShoping.demo.model;
 
+import java.util.List;
+
+import com.onlineShoping.demo.entity.Roles;
 import com.onlineShoping.demo.util.CustomerGender;
 
 public class User {
@@ -23,6 +26,10 @@ public class User {
 	private String billingAddress;
 
 	private boolean selfRegistration;
+	
+	private List<Roles> roles;
+	
+	private String token;
 
 	
 
@@ -121,5 +128,23 @@ public class User {
 	public void setGender(CustomerGender gender) {
 		this.gender = gender;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public List<Roles> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Roles> roles) {
+		this.roles = roles;
+	}
+	
+	
 
 }

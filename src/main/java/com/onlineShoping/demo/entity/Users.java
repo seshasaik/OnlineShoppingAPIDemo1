@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.onlineShoping.demo.util.CustomerGender;
 import com.onlineShoping.demo.util.UserState;
 
 @Document(collection = "users")
@@ -26,6 +27,7 @@ public class Users implements UserDetails {
 	private String userName;
 	private String password;
 	private UserState state;
+	private CustomerGender gender;
 
 	private List<Roles> roles;
 
@@ -72,6 +74,14 @@ public class Users implements UserDetails {
 		this.state = state;
 	}
 
+	public CustomerGender getGender() {
+		return gender;
+	}
+
+	public void setGender(CustomerGender gender) {
+		this.gender = gender;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
@@ -89,19 +99,19 @@ public class Users implements UserDetails {
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -117,6 +127,5 @@ public class Users implements UserDetails {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
-
 
 }

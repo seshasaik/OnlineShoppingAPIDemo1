@@ -1,5 +1,6 @@
 package com.onlineShoping.demo.controller;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpEntity;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +45,7 @@ public class UserController {
 	}
 
 	@PostMapping(path = {"/login"})
-	public Users login(@RequestBody User user) {
+	public User login(@RequestBody User user) {
 
 		authManager.authenticate(new UsernamePasswordAuthenticationToken(
 				user.getUserName(), user.getPassword()));
@@ -52,8 +54,11 @@ public class UserController {
 				.loadUserByUsername(user.getUserName());
 
 		String token = jwtTokenUtil.generateToken(userInDB);
-		
-		return userInDB;
+
+		BeanUtils.copyProperties(userInDB, user);
+		user.setPassword("");
+		user.setToken(token);
+		return user;
 
 	}
 	@PostMapping(path = {"/sign-up"})
