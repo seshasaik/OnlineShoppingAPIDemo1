@@ -14,10 +14,12 @@ import com.onlineShoping.demo.entity.Customer;
 import com.onlineShoping.demo.entity.Roles;
 import com.onlineShoping.demo.entity.Users;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
+import com.onlineShoping.demo.exceptions.PasswordMismatchException;
 import com.onlineShoping.demo.exceptions.UserNotFoundException;
 import com.onlineShoping.demo.model.User;
 import com.onlineShoping.demo.repository.RoleRepository;
 import com.onlineShoping.demo.repository.UserRepository;
+import com.onlineShoping.demo.util.CurrentLoginUser;
 import com.onlineShoping.demo.util.UserRole;
 import com.onlineShoping.demo.util.UserState;
 
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	CustomerService customerService;
-	
+
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
@@ -43,12 +45,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username)
-			throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		return userRepository.findByUserName(username).orElseThrow(() -> {
-			return new UsernameNotFoundException(String.format(
-					"User with given name : %1$s is not found", username));
+			return new UsernameNotFoundException(String.format("User with given name : %1$s is not found", username));
 		});
 	}
 
@@ -56,8 +56,7 @@ public class UserServiceImpl implements UserService {
 	public Users findByUserId(String userId) {
 		// TODO Auto-generated method stub
 		return userRepository.findById(userId).orElseThrow(() -> {
-			return new UserNotFoundException(String
-					.format("User with given id : %1$s is not found", userId));
+			return new UserNotFoundException(String.format("User with given id : %1$s is not found", userId));
 		});
 	}
 
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
 			Customer customer = new Customer();
 			BeanUtils.copyProperties(user, customer);
-			
+
 			customer = customerService.saveCustomer(customer);
 
 			Users webUser = new Users();
@@ -83,12 +82,47 @@ public class UserServiceImpl implements UserService {
 			userRepository.save(webUser);
 
 		} else {
-			throw new CustomerAlreadyExistedException(
-					String.format(USER_NAME_EXISTED_MSG, user.getUserName()));
+			throw new CustomerAlreadyExistedException(String.format(USER_NAME_EXISTED_MSG, user.getUserName()));
 		}
 
 	}
 
+	@Override
+	public Users profile() {
+		// TODO Auto-generated method stub
+		Users existingUser = findByUserId(CurrentLoginUser.getUser().getId());
+		existingUser.getCustomer();
+		return existingUser;
+	}
+
+	@Override
+	public void updateProfile(User user) throws CustomerAlreadyExistedException {
+		// TODO Auto-generated method stub
+
+		Users oldProfile = profile();		
+		Customer customer = new Customer();
+		BeanUtils.copyProperties(user, customer);	
+		customer.setCustomerId(oldProfile.getCustomer().getCustomerId());
+		customer.setAccount(oldProfile.getCustomer().getAccount());
+		customer.getAccount().setBillingAddress(user.getAddress());
+		customerService.updateCustomer(customer);
+
+	}
+
+	@Override
+	public void changePassword(User user) throws PasswordMismatchException {
+		// TODO Auto-generated method stub
+		Users existingUser = findByUserId(CurrentLoginUser.getUser().getId());
+		
+		if(passwordEncoder.matches(user.getOldPassword(), existingUser.getPassword())) {
+			existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+			userRepository.save(existingUser);
+		}else {
+			throw new PasswordMismatchException("Old password mismatched with your password");
+		}
+		
+	}
+	
 	
 
 }

@@ -15,7 +15,7 @@ public interface CustomerService  {
 
 	Customer saveCustomer(Customer customer) throws CustomerAlreadyExistedException;
 
-	void updateCustomer(Customer customer);
+	void updateCustomer(Customer customer)  throws CustomerAlreadyExistedException;
 
 	Customer findByCustomerId(String id);
 

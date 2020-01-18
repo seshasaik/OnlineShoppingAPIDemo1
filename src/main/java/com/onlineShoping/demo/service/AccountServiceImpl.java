@@ -32,4 +32,10 @@ public class AccountServiceImpl implements AccountService {
 
 	}
 
+	@Override
+	public Account updateAccount(Account account) {
+		// TODO Auto-generated method stub
+		return accountRepository.save(account);
+	}
+
 }

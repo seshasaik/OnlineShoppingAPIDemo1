@@ -79,7 +79,7 @@ public class CustomerController {
 	}
 
 	@PutMapping(path = "/{customerId}")
-	public ResponseEntity<String> updateCustomer(@PathVariable String customerId, @RequestBody Customer customer) {
+	public ResponseEntity<String> updateCustomer(@PathVariable String customerId, @RequestBody Customer customer) throws CustomerAlreadyExistedException {
 		customerService.updateCustomer(customer);
 		return new ResponseEntity<String>("Customer updated successfully", HttpStatus.OK);
 	}

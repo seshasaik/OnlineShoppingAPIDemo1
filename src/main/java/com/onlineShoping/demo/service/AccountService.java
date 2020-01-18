@@ -8,4 +8,6 @@ public interface AccountService {
 
 	void findAccountById(String id);
 
+	Account updateAccount(Account account);
+
 }
