@@ -5,14 +5,18 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.onlineShoping.demo.util.ProductStatus;
+
 @Document
 public class Product {
 
 	@Id
 	private String id;
 	private String name;
-	private String mrp;
+	private String description;
+	private List<ProductFeature> features;
 	private List<Supplier> suppliers;
+	private ProductStatus status;
 
 	public String getId() {
 		return id;
@@ -38,12 +42,30 @@ public class Product {
 		this.suppliers = suppliers;
 	}
 
-	public String getMrp() {
-		return mrp;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setMrp(String mrp) {
-		this.mrp = mrp;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	
+
+	public List<ProductFeature> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(List<ProductFeature> features) {
+		this.features = features;
+	}
+
+	public ProductStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ProductStatus status) {
+		this.status = status;
 	}
 
 }
