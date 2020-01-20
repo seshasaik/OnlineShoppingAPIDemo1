@@ -1,7 +1,13 @@
 package com.onlineShoping.demo.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "supplier")
 public class Supplier {
 
+	@Id
+	private String id;
 	private String regNumber;
 	private String name;
 	private String phone;
@@ -47,11 +53,22 @@ public class Supplier {
 	public void setRegNumber(String regNumber) {
 		this.regNumber = regNumber;
 	}
+	
+	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	@Override
 	public String toString() {
-		return "Supplier [regNumber = " + regNumber + ", name=" + name + ", phone=" + phone + ", mobile=" + mobile
-				+ ", address=" + address + "]";
+		return "Supplier [regNumber = " + regNumber + ", name=" + name
+				+ ", phone=" + phone + ", mobile=" + mobile + ", address="
+				+ address + "]";
 	}
 
 	@Override
@@ -60,5 +77,7 @@ public class Supplier {
 		Supplier other = (Supplier) obj;
 		return this.regNumber.equals(other.getRegNumber());
 	}
+	
+	
 
 }

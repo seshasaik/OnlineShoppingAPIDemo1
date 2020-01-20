@@ -86,7 +86,7 @@ public class Users implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		return this.roles.stream().map(role -> {
-			return new SimpleGrantedAuthority("Role_" + role.getName().toString());
+			return new SimpleGrantedAuthority("ROLE_"+role.getName().toString());
 		}).collect(Collectors.toList());
 	}
 

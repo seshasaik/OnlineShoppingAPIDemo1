@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,12 +46,14 @@ public class UserController {
 		// TODO Auto-generated constructor stub
 	}
 
-	@PostMapping(path = { "/login" })
+	@PostMapping(path = {"/login"})
 	public User login(@RequestBody User user) {
 
-		authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
-
-		Users userInDB = (Users) userService.loadUserByUsername(user.getUserName());
+		Users userInDB = (Users) userService
+				.loadUserByUsername(user.getUserName());
+		authManager.authenticate(
+				new UsernamePasswordAuthenticationToken(user.getUserName(),
+						user.getPassword(), userInDB.getAuthorities()));
 
 		String token = jwtTokenUtil.generateToken(userInDB);
 
@@ -60,14 +64,16 @@ public class UserController {
 
 	}
 
-	@PostMapping(path = { "/sign-up" })
+	@PostMapping(path = {"/sign-up"})
 	@ResponseStatus(code = HttpStatus.OK)
-	public HttpEntity<SuccessAPIResponse> register(@RequestBody User user) throws CustomerAlreadyExistedException {
+	public HttpEntity<SuccessAPIResponse> register(@RequestBody User user)
+			throws CustomerAlreadyExistedException {
 		userService.registerUser(user);
-		return new HttpEntity<SuccessAPIResponse>(new SuccessAPIResponse("User registration successfully"));
+		return new HttpEntity<SuccessAPIResponse>(
+				new SuccessAPIResponse("User registration successfully"));
 	}
 
-	@GetMapping(path = { "/profile" })
+	@GetMapping(path = {"/profile"})
 	@ResponseStatus(code = HttpStatus.OK)
 	public User profile() {
 
@@ -80,52 +86,71 @@ public class UserController {
 		return usr;
 	}
 
-	@PostMapping(path = { "/profile" })
+	@PostMapping(path = {"/profile"})
 	@ResponseStatus(code = HttpStatus.OK)
-	public HttpEntity<SuccessAPIResponse> updateProfile(@RequestBody User user) throws CustomerAlreadyExistedException {
+	public HttpEntity<SuccessAPIResponse> updateProfile(@RequestBody User user)
+			throws CustomerAlreadyExistedException {
 		userService.updateProfile(user);
-		return new HttpEntity<SuccessAPIResponse>(new SuccessAPIResponse("Profile saved successfully"));
+		return new HttpEntity<SuccessAPIResponse>(
+				new SuccessAPIResponse("Profile saved successfully"));
 	}
 
-	@PostMapping(path = { "/change-password" })
+	@PostMapping(path = {"/change-password"})
 	@ResponseStatus(code = HttpStatus.OK)
 	public HttpEntity<SuccessAPIResponse> changePassword(@RequestBody User user)
 			throws CustomerAlreadyExistedException, PasswordMismatchException {
 		userService.changePassword(user);
-		return new HttpEntity<SuccessAPIResponse>(new SuccessAPIResponse("Password changed successfully"));
+		return new HttpEntity<SuccessAPIResponse>(
+				new SuccessAPIResponse("Password changed successfully"));
 	}
 
-	@ExceptionHandler(value = { AuthenticationException.class })
-	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
-	public BaseAPIResponse handleAuthenticationFaliedException(AuthenticationException e) {
+	@ExceptionHandler(value = {UsernameNotFoundException.class,
+			AuthenticationException.class})
+	public ResponseEntity<BaseAPIResponse> handleAuthenticationFaliedException(
+			AuthenticationException e) {
+		HttpStatus httpStatus = HttpStatus.FORBIDDEN;
 
-		if (e instanceof BadCredentialsException) {
-			return new AuthenticationFaliedResponse();
-		} else if (e instanceof DisabledException) {
-			return new AuthenticationFaliedResponse(String.format("Your access is disabled"));
-		} else {
-			return new AuthenticationFaliedResponse();
+		if (e instanceof DisabledException) {
+			return new ResponseEntity<>(
+					new AuthenticationFaliedResponse(String.format(
+							"Your access is disabled, please contact admin")),
+					httpStatus);
+		} else if (e instanceof UsernameNotFoundException
+				| e instanceof BadCredentialsException) {
+			httpStatus = HttpStatus.NOT_FOUND;
+			return new ResponseEntity<>(
+					new AuthenticationFaliedResponse(httpStatus.value(),
+							httpStatus.name(), e.getMessage()),
+					httpStatus);
+		}
+
+		else {
+			return new ResponseEntity<>(new AuthenticationFaliedResponse(),
+					httpStatus);
 		}
 
 	}
 
-	@ExceptionHandler(value = { PasswordMismatchException.class })
+	@ExceptionHandler(value = {PasswordMismatchException.class})
 	@ResponseStatus(code = HttpStatus.CONFLICT)
-	public BaseAPIResponse handlePasswordMismatchException(PasswordMismatchException e) {
+	public BaseAPIResponse handlePasswordMismatchException(
+			PasswordMismatchException e) {
 
 		return new AuthenticationFaliedResponse(e.getMessage());
 
 	}
 
-	@ExceptionHandler(value = { CustomerAlreadyExistedException.class })
+	@ExceptionHandler(value = {CustomerAlreadyExistedException.class})
 	@ResponseStatus(code = HttpStatus.CONFLICT)
-	public BaseAPIResponse handleCustomerAlreadyExistedException(CustomerAlreadyExistedException e) {
+	public BaseAPIResponse handleCustomerAlreadyExistedException(
+			CustomerAlreadyExistedException e) {
 		return new CustomerRegistrationFailedErrorResponse(e.getMessage());
 	}
 
-	@ExceptionHandler(value = { DataIntegrityViolationException.class })
+	@ExceptionHandler(value = {DataIntegrityViolationException.class})
 	@ResponseStatus(code = HttpStatus.CONFLICT)
-	public BaseAPIResponse handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+	public BaseAPIResponse handleDataIntegrityViolationException(
+			DataIntegrityViolationException e) {
 		return new CustomerRegistrationFailedErrorResponse();
 	}
 
