@@ -29,7 +29,11 @@ public class SupplierServiceImpl implements SupplierService {
 		// TODO Auto-generated method stub
 		return supplierRepository.findAll();
 	}
-
+	@Override
+	public List<Supplier> getAllSuppliers(String[] supplierIds) {
+		// TODO Auto-generated method stub
+		return supplierRepository.findByIdNotIn(supplierIds);
+	}
 	@Override
 	public Supplier getSupplierById(String id)
 			throws SupplierNotFoundException {

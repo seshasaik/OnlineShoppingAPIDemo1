@@ -10,6 +10,8 @@ public interface SupplierService {
 
 	List<Supplier> getAllSuppliers();
 	
+	List<Supplier> getAllSuppliers(String[] supplierIds);
+	
 	Supplier getSupplierById(String id) throws SupplierNotFoundException;
 	
 	void saveSupplier(Supplier supplier) throws SupplierAlreadyExistedException;
