@@ -1,9 +1,11 @@
 package com.onlineShoping.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.onlineShoping.demo.repository.InventoryRepository;
 
+@Service
 public class InventoryServiceImpl implements InventoryService {
 
 	

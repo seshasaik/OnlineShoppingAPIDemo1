@@ -18,7 +18,6 @@ import com.onlineShoping.demo.exceptions.SupplierNotFoundException;
 import com.onlineShoping.demo.repository.ProductRepository;
 
 @Service
-
 public class ProductServiceImpl implements ProductService {
 
 	@Autowired
@@ -49,6 +48,12 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> findAllProducts() {
 		// TODO Auto-generated method stub
 		return productRepository.findAll(Sort.by(Order.desc("id")));
+	}
+
+	@Override
+	public List<Product> findAllProductsBySupplierId(String supplierId) {
+		// TODO Auto-generated method stub
+		return productRepository.findBySupplierId(supplierId);
 	}
 
 	@Override
