@@ -11,6 +11,6 @@ import com.onlineShoping.demo.entity.Product;
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String> {
 
-	@Query(value = "{'$in' : ['suppliers':{'id':?0}]}")
-	List<Product> findBySupplierId(String ids);
+	@Query(value = "{'suppliers.id':?0}")
+	List<Product> findSuppliersById(String id);
 }

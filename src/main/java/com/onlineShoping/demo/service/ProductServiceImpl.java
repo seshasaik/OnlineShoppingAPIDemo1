@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> findAllProductsBySupplierId(String supplierId) {
 		// TODO Auto-generated method stub
-		return productRepository.findBySupplierId(supplierId);
+		return productRepository.findSuppliersById(supplierId);
 	}
 
 	@Override
