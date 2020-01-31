@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.onlineShoping.demo.entity.Account;
 import com.onlineShoping.demo.entity.Customer;
-import com.onlineShoping.demo.entity.Order;
+import com.onlineShoping.demo.entity.GoodsOrder;
 import com.onlineShoping.demo.entity.Payment;
 import com.onlineShoping.demo.entity.ShopingCart;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
@@ -98,7 +98,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public List<Order> getOrdersByAccount(String cutomerId) {
+	public List<GoodsOrder> getOrdersByAccount(String cutomerId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

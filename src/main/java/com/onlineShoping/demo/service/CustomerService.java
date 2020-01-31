@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.onlineShoping.demo.entity.Customer;
-import com.onlineShoping.demo.entity.Order;
+import com.onlineShoping.demo.entity.GoodsOrder;
 import com.onlineShoping.demo.entity.Payment;
 import com.onlineShoping.demo.entity.ShopingCart;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
@@ -25,7 +25,7 @@ public interface CustomerService  {
 
 	List<Customer> findAllCustomers();
 
-	List<Order> getOrdersByAccount(String cutomerId);
+	List<GoodsOrder> getOrdersByAccount(String cutomerId);
 
 	List<Payment> getPayments(String cutomerId);
 

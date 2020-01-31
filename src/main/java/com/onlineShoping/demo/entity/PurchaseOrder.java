@@ -1,29 +1,33 @@
 package com.onlineShoping.demo.entity;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.onlineShoping.demo.util.ProductOrderStatus;
+import com.onlineShoping.demo.util.PurchaseOrderStatus;
 
 @Document
 public class PurchaseOrder {
 
+	@Id
 	private String id;
 
 	private String purchaseOrderCode;
 
-	private LocalTime cratedDate;
+	private LocalDateTime cratedDate = LocalDateTime.now();
 
-	private ProductOrderStatus status;
+	private PurchaseOrderStatus status;
 
 	private Double worth;
 
-	private Users user;
+	
+	
+	private String userName;
 
 	private List<PurchaseOrderItem> items;
-	
+
 	private Supplier supplier;
 
 	public String getId() {
@@ -42,19 +46,21 @@ public class PurchaseOrder {
 		this.purchaseOrderCode = purchaseOrderCode;
 	}
 
-	public LocalTime getCratedDate() {
+
+
+	public LocalDateTime getCratedDate() {
 		return cratedDate;
 	}
 
-	public void setCratedDate(LocalTime cratedDate) {
+	public void setCratedDate(LocalDateTime cratedDate) {
 		this.cratedDate = cratedDate;
 	}
 
-	public ProductOrderStatus getStatus() {
+	public PurchaseOrderStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(ProductOrderStatus status) {
+	public void setStatus(PurchaseOrderStatus status) {
 		this.status = status;
 	}
 
@@ -66,12 +72,13 @@ public class PurchaseOrder {
 		this.worth = worth;
 	}
 
-	public Users getUser() {
-		return user;
+
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUser(Users user) {
-		this.user = user;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public List<PurchaseOrderItem> getItems() {
@@ -90,62 +97,6 @@ public class PurchaseOrder {
 		this.supplier = supplier;
 	}
 
-	public class PurchaseOrderItem {
-
-		private Product product;
-
-		private long orderedQty;
-
-		private long receivedQty;
-
-		private long pendingQty;
-
-		private Double cost;
-
-		public PurchaseOrderItem() {
-
-		}
-
-		public Product getProduct() {
-			return product;
-		}
-
-		public void setProduct(Product product) {
-			this.product = product;
-		}
-
-		public long getOrderedQty() {
-			return orderedQty;
-		}
-
-		public void setOrderedQty(long orderedQty) {
-			this.orderedQty = orderedQty;
-		}
-
-		public long getReceivedQty() {
-			return receivedQty;
-		}
-
-		public void setReceivedQty(long receivedQty) {
-			this.receivedQty = receivedQty;
-		}
-
-		public long getPendingQty() {
-			return pendingQty;
-		}
-
-		public void setPendingQty(long pendingQty) {
-			this.pendingQty = pendingQty;
-		}
-
-		public Double getCost() {
-			return cost;
-		}
-
-		public void setCost(Double cost) {
-			this.cost = cost;
-		}
-
-	}
+	
 
 }

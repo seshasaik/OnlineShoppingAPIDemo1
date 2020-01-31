@@ -1,5 +1,5 @@
 package com.onlineShoping.demo.util;
 
-public enum ProductOrderStatus {
+public enum PurchaseOrderStatus {
 	PENDING, COMPLETED, CANCELD , CREATE
 }

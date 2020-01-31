@@ -22,7 +22,7 @@ public class Account {
 	private ShopingCart cart;
 
 	@DBRef
-	private List<Order> orders = new ArrayList<>();
+	private List<GoodsOrder> orders = new ArrayList<>();
 
 	public String getId() {
 		return id;
@@ -72,11 +72,11 @@ public class Account {
 		this.cart = cart;
 	}
 
-	public List<Order> getOrders() {
+	public List<GoodsOrder> getOrders() {
 		return orders;
 	}
 
-	public void setOrders(List<Order> orders) {
+	public void setOrders(List<GoodsOrder> orders) {
 		this.orders = orders;
 	}
 

@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import com.onlineShoping.demo.util.OrderStatus;
 
 @Document
-public class Order {
+public class GoodsOrder {
 
 	private String number;
 	private LocalDate ordered;
