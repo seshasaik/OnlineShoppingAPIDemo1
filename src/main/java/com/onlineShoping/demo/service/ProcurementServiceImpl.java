@@ -45,6 +45,9 @@ public class ProcurementServiceImpl implements ProcurementService {
 
 	@Autowired
 	GRNRepository GRNRepository;
+	
+	@Autowired
+	InventoryService inventoryService;
 
 	@Override
 	public void createPurchaseOrder(PurchaseOrderModal purchaseOrderModal) {
@@ -85,7 +88,11 @@ public class ProcurementServiceImpl implements ProcurementService {
 		BeanUtils.copyProperties(goodsReceiptNotes, gr, "createdOn");
 		Users user = (Users) CurrentLoginUser.getUser();
 		gr.setReceivedUser(user.getUsername());
+		inventoryService.addProductQuantity(gr);
 		this.GRNRepository.save(gr);
+		
+//		List<GoodsReceipt> goodsReceipt = GRNRepository.findAllByPurchaseOrder(gr.getPurchaseOrder());
+		
 	}
 
 	@Override

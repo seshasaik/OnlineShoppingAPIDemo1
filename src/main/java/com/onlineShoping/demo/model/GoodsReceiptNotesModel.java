@@ -2,6 +2,7 @@ package com.onlineShoping.demo.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.onlineShoping.demo.entity.PurchaseOrderItem;
 
 public class GoodsReceiptNotesModel {
@@ -12,6 +13,7 @@ public class GoodsReceiptNotesModel {
 
 	private String id;
 
+	@JsonProperty("GRNCode")
 	private String GRNCode;
 
 	private Double worth;

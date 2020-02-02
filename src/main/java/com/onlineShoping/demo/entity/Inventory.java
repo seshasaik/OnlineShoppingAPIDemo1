@@ -1,5 +1,7 @@
 package com.onlineShoping.demo.entity;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,7 +15,7 @@ public class Inventory {
 	private String id;
 	@DBRef
 	private Product product;
-	private ProductStock[] stock;
+	private List<ProductStock> stock;
 	private ProductStatus status;
 
 	public Product getProduct() {
@@ -32,11 +34,11 @@ public class Inventory {
 		this.id = id;
 	}
 
-	public ProductStock[] getStock() {
+	public List<ProductStock> getStock() {
 		return stock;
 	}
 
-	public void setStock(ProductStock[] stock) {
+	public void setStock(List<ProductStock> stock) {
 		this.stock = stock;
 	}
 

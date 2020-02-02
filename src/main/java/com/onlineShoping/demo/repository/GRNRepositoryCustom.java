@@ -7,5 +7,7 @@ import com.onlineShoping.demo.entity.GoodsReceipt;
 public interface GRNRepositoryCustom {
 	
 	public List<GoodsReceipt> findAllGRNExculdingItems();
+	
+	
 
 }

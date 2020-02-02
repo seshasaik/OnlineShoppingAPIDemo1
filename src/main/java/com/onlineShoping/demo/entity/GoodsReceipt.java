@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document(collection = "goodsReceiptNotes")
 public class GoodsReceipt {
 	
@@ -19,6 +21,7 @@ public class GoodsReceipt {
 	@Id
 	private String id;
 
+	@JsonProperty("GRNCode")
 	@Indexed(background = true, direction = IndexDirection.DESCENDING, unique = true)
 	private String GRNCode;
 

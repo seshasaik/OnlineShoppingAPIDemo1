@@ -16,7 +16,7 @@ public class PurchaseOrderItem {
 
 	private Double cost;
 
-	private Double total;
+	private Double unitPrice;
 
 	public Product getProduct() {
 		return product;
@@ -58,12 +58,12 @@ public class PurchaseOrderItem {
 		this.cost = cost;
 	}
 
-	public Double getTotal() {
-		return total;
+	public Double getUnitPrice() {
+		return unitPrice;
 	}
 
-	public void setTotal(Double total) {
-		this.total = total;
+	public void setUnitPrice(Double unitPrice) {
+		this.unitPrice = unitPrice;
 	}
 
-}
+	}
