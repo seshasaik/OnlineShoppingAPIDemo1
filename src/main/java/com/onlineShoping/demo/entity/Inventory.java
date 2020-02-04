@@ -15,7 +15,7 @@ public class Inventory {
 	private String id;
 	@DBRef
 	private Product product;
-	private List<ProductStock> stock;
+	private List<ProductStock> stock;	
 	private ProductStatus status;
 
 	public Product getProduct() {
@@ -33,6 +33,8 @@ public class Inventory {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	
 
 	public List<ProductStock> getStock() {
 		return stock;

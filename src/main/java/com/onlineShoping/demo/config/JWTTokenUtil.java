@@ -52,7 +52,7 @@ public class JWTTokenUtil {
 
 		//generate token for user
 		public String generateToken(UserDetails userDetails) {
-			Map<String, Object> claims = new HashMap<>();
+			Map<String, Object> claims = new HashMap<>();			
 			return doGenerateToken(claims, userDetails.getUsername());
 		}
 

@@ -41,8 +41,8 @@ public class InventoryServiceImpl implements InventoryService {
 
 			if (!Objects.isNull(inventory) && !Objects.isNull(inventory.getStock()) && inventory.getStock().size() > 0) {
 				inventory.setStock(inventory.getStock().stream().map((stock) -> {
-					long totalQty = item.getReceivedQty() + stock.getQuntity();
-					stock.setQuntity(totalQty);
+					long totalQty = item.getReceivedQty() + stock.getQuantity();
+					stock.setQuantity(totalQty);
 					stock.setMrp(item.getUnitPrice());
 					return stock;
 				}).collect(Collectors.toList()));
@@ -50,15 +50,18 @@ public class InventoryServiceImpl implements InventoryService {
 
 			} else {
 
-				if (Objects.isNull(inventory))
+				if (Objects.isNull(inventory)) {
 					inventory = new Inventory();
+					inventory.setStock(new ArrayList<>());
+					inventory.setStatus(ProductStatus.ACTIVE);
+				}
 
 				ProductStock stock = new ProductStock();
 				stock.setMrp(item.getUnitPrice());
-				stock.setQuntity(item.getReceivedQty());
+				stock.setQuantity(item.getReceivedQty());
 				stock.setStatus(ProductStatus.ACTIVE);
 
-				inventory.setStock(new ArrayList<>());
+				
 				inventory.getStock().add(stock);
 
 			}
@@ -72,9 +75,9 @@ public class InventoryServiceImpl implements InventoryService {
 	}
 
 	@Override
-	public void getProductQuantity() {
+	public List<Inventory> getProductQuantity() {
 		// TODO Auto-generated method stub
-		inventoryRepository.findAll();
+		return inventoryRepository.findByStatus(ProductStatus.ACTIVE);
 	}
 
 	@Override

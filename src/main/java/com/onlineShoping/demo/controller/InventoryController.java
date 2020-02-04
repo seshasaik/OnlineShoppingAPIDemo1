@@ -3,6 +3,7 @@ package com.onlineShoping.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,17 +21,12 @@ public class InventoryController {
 		// TODO Auto-generated constructor stub
 	}
 
+	@GetMapping
 	public List<Inventory> getInventory() {
-		return null;
+		return inventoryService.getProductQuantity();
 	}
 
-	public void saveInventory(List<Inventory> inventories) {
-
-	}
-
-	public void updateInventory(List<Inventory> inventories) {
-
-	}
+	
 
 	private List<Inventory> zeroItemInvetory() {
 		return null;

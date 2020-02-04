@@ -6,7 +6,7 @@ public class ProductStock {
 	
 	private String batchNo;
 	
-	private long quntity;
+	private long quantity;
 	
 	private Double mrp;
 	
@@ -24,12 +24,14 @@ public class ProductStock {
 		this.batchNo = batchNo;
 	}
 
-	public long getQuntity() {
-		return quntity;
+
+
+	public long getQuantity() {
+		return quantity;
 	}
 
-	public void setQuntity(long quntity) {
-		this.quntity = quntity;
+	public void setQuantity(long quantity) {
+		this.quantity = quantity;
 	}
 
 	public Double getMrp() {
