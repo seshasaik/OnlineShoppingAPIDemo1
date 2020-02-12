@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
@@ -47,7 +50,18 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> findAllProducts() {
 		// TODO Auto-generated method stub
-		return productRepository.findAll(Sort.by(Order.desc("id")));
+		Sort sort = Sort.by(Order.desc("id"));
+		return productRepository.findAll(sort);
+	}
+
+	@Override
+	public List<Product> findAllProducts(int page, int size) {
+		// TODO Auto-generated method stub
+		final Pageable pagebale = PageRequest.of(page, size,
+				Sort.by(Order.by("id")));
+		Page<Product> currentPage = productRepository.findAll(pagebale);
+		return currentPage.getContent();
+
 	}
 
 	@Override
@@ -60,7 +74,8 @@ public class ProductServiceImpl implements ProductService {
 	public Product findById(String id) {
 		// TODO Auto-generated method stub
 		return productRepository.findById(id).orElseThrow(() -> {
-			return new ProductNotFoundException(String.format("Product not found for given id : %1$s", id));
+			return new ProductNotFoundException(
+					String.format("Product not found for given id : %1$s", id));
 		});
 	}
 
@@ -70,9 +85,10 @@ public class ProductServiceImpl implements ProductService {
 		Product product = findById(id);
 		List<Supplier> suppliers = product.getSuppliers();
 		if (suppliers.contains(supplier)) {
-			throw new SupplierAlreadyExistedException(
-					String.format("Supplier %1$s with Registed number %2$s is existed in product %3$s",
-							supplier.getName(), supplier.getRegNumber(), product.getName()));
+			throw new SupplierAlreadyExistedException(String.format(
+					"Supplier %1$s with Registed number %2$s is existed in product %3$s",
+					supplier.getName(), supplier.getRegNumber(),
+					product.getName()));
 		}
 		suppliers.add(supplier);
 		productRepository.save(product);
@@ -84,9 +100,10 @@ public class ProductServiceImpl implements ProductService {
 		// TODO Auto-generated method stub
 		Product product = findById(id);
 		if (!product.getSuppliers().remove(supplier)) {
-			throw new SupplierNotFoundException(
-					String.format("Supplier %1$s with Registed number %2$s is not found in product %3$s",
-							supplier.getName(), supplier.getRegNumber(), product.getName()));
+			throw new SupplierNotFoundException(String.format(
+					"Supplier %1$s with Registed number %2$s is not found in product %3$s",
+					supplier.getName(), supplier.getRegNumber(),
+					product.getName()));
 		}
 
 		productRepository.save(product);

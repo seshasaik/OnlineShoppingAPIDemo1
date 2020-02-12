@@ -1,7 +1,9 @@
 package com.onlineShoping.demo.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,15 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.onlineShoping.demo.entity.Account;
 import com.onlineShoping.demo.entity.Customer;
 import com.onlineShoping.demo.entity.GoodsOrder;
+import com.onlineShoping.demo.entity.LineItem;
 import com.onlineShoping.demo.entity.Payment;
 import com.onlineShoping.demo.entity.ShopingCart;
+import com.onlineShoping.demo.exceptions.CartUnderFlowException;
 import com.onlineShoping.demo.exceptions.CustomerAlreadyExistedException;
 import com.onlineShoping.demo.exceptions.CustomerNotFoundException;
 import com.onlineShoping.demo.model.User;
 import com.onlineShoping.demo.repository.CustomerRepository;
 
 @Service
-
 public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
@@ -30,10 +33,12 @@ public class CustomerServiceImpl implements CustomerService {
 	private final String EMAIL_EXISTED_MSG = "Email \'%1$s\' is alreday existed, please try with another one";
 	private final String MOBIL_EXISTED_MSG = "Mobile \'%1$s\' is alreday existed, please try with another one";
 	private final String CUSTOMER_NOT_FOUND_MSG = "Customer not found with given %1$s : %2$s";
+	private final String CART_UNDER_FLOW_MSG = "Invalid Operation : There is no items in cart to remove";
 
 	@Override
-	@Transactional(rollbackFor = { CustomerAlreadyExistedException.class })
-	public Customer saveCustomer(Customer customer) throws CustomerAlreadyExistedException {
+	@Transactional(rollbackFor = {CustomerAlreadyExistedException.class})
+	public Customer saveCustomer(Customer customer)
+			throws CustomerAlreadyExistedException {
 
 		Customer existedCustomerWithEmail = null;
 		Customer existedCustomerWithMobile = null;
@@ -46,7 +51,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 			// Check for customer by given mobile nos
 			try {
-				existedCustomerWithMobile = this.findByPhone(customer.getPhone());
+				existedCustomerWithMobile = this
+						.findByPhone(customer.getPhone());
 			} catch (CustomerNotFoundException e) {
 				// TODO: handle exception
 			}
@@ -58,11 +64,13 @@ public class CustomerServiceImpl implements CustomerService {
 				return customerRepository.save(customer);
 
 			} else {
-				throw new CustomerAlreadyExistedException(String.format(MOBIL_EXISTED_MSG, customer.getPhone()));
+				throw new CustomerAlreadyExistedException(
+						String.format(MOBIL_EXISTED_MSG, customer.getPhone()));
 			}
 
 		} else {
-			throw new CustomerAlreadyExistedException(String.format(EMAIL_EXISTED_MSG, customer.getEmail()));
+			throw new CustomerAlreadyExistedException(
+					String.format(EMAIL_EXISTED_MSG, customer.getEmail()));
 		}
 
 		// Optional<Customer> customerWithSameEmail =
@@ -76,15 +84,17 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void updateCustomer(Customer customer) throws CustomerAlreadyExistedException {
+	public void updateCustomer(Customer customer)
+			throws CustomerAlreadyExistedException {
 
-		if (Objects.isNull(customerRepository.findByEmailAndCustomerIdNot(customer.getEmail(), customer.getCustomerId())
-				.orElse(null))) {
+		if (Objects.isNull(customerRepository.findByEmailAndCustomerIdNot(
+				customer.getEmail(), customer.getCustomerId()).orElse(null))) {
 			accountService.updateAccount(customer.getAccount());
 			customerRepository.save(customer);
 
 		} else {
-			throw new CustomerAlreadyExistedException(String.format(EMAIL_EXISTED_MSG, customer.getEmail()));
+			throw new CustomerAlreadyExistedException(
+					String.format(EMAIL_EXISTED_MSG, customer.getEmail()));
 		}
 
 	}
@@ -93,7 +103,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer findByCustomerId(String id) {
 		// TODO Auto-generated method stub
 		return customerRepository.findById(id).orElseThrow(() -> {
-			return new CustomerNotFoundException(String.format("Customer not found with given id : %1$s", id));
+			return new CustomerNotFoundException(String
+					.format("Customer not found with given id : %1$s", id));
 		});
 	}
 
@@ -116,6 +127,53 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	public void addProductToCart(String customerId, LineItem lineItem) {
+		// TODO Auto-generated method stub
+		Account account = findByCustomerId(customerId).getAccount();
+		ShopingCart cart = account.getCart();
+
+		if (cart.getItems().isEmpty()) {
+			cart.setCreated(LocalDate.now());
+		}
+
+		cart.getItems().add(lineItem);
+		accountService.updateAccount(account);
+
+	}
+
+	@Override
+	public void removeProductFromCart(String customerId, LineItem lineItem) {
+		// TODO Auto-generated method stub
+		Account account = findByCustomerId(customerId).getAccount();
+		ShopingCart cart = account.getCart();
+		if (cart.getItems().isEmpty()) {
+			throw new CartUnderFlowException(this.CART_UNDER_FLOW_MSG);
+		}
+		cart.getItems().remove(lineItem);
+		accountService.updateAccount(account);
+	}
+
+	@Override
+	public void updateProdctQuantityInCart(String customerId,
+			LineItem lineItem) {
+		Account account = findByCustomerId(customerId).getAccount();
+		ShopingCart cart = account.getCart();
+
+		if (cart.getItems().isEmpty()) {
+			throw new CartUnderFlowException(this.CART_UNDER_FLOW_MSG);
+		}
+
+		cart.setItems(cart.getItems().stream().map(item -> {
+			if (item.getId().equals(lineItem.getId())) {
+				item.setQuantity(lineItem.getQuantity());
+			}
+			return item;
+		}).collect(Collectors.toList()));
+		accountService.updateAccount(account);
+
+	}
+
+	@Override
 	public List<Customer> findAllCustomers() {
 		// TODO Auto-generated method stub
 		return customerRepository.findAll();
@@ -125,7 +183,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer findByEmail(String email) {
 		// TODO Auto-generated method stub
 		return customerRepository.findByEmail(email).orElseThrow(() -> {
-			return new CustomerNotFoundException(String.format(CUSTOMER_NOT_FOUND_MSG, "email", email));
+			return new CustomerNotFoundException(
+					String.format(CUSTOMER_NOT_FOUND_MSG, "email", email));
 		});
 	}
 
@@ -133,18 +192,21 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<Customer> searchCustomer(User user) {
 		// TODO Auto-generated method stub
 
-		return customerRepository.findByPhoneOrEmail(user.getPhone(), user.getEmail(), null);
+		return customerRepository.findByPhoneOrEmail(user.getPhone(),
+				user.getEmail(), null);
 	}
 
 	@Override
 	public Customer findByPhone(String phone) {
 		// TODO Auto-generated method stub
 		return customerRepository.findByPhone(phone).orElseThrow(() -> {
-			return new CustomerNotFoundException(String.format(CUSTOMER_NOT_FOUND_MSG, "mobile", phone));
+			return new CustomerNotFoundException(
+					String.format(CUSTOMER_NOT_FOUND_MSG, "mobile", phone));
 		});
 	}
 
-	private void checkCustomerConstraints(Customer customer) throws CustomerAlreadyExistedException {
+	private void checkCustomerConstraints(Customer customer)
+			throws CustomerAlreadyExistedException {
 
 	}
 

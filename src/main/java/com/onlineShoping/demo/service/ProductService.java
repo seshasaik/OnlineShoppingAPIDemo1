@@ -2,6 +2,8 @@ package com.onlineShoping.demo.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+
 import com.onlineShoping.demo.entity.Product;
 import com.onlineShoping.demo.entity.Supplier;
 
@@ -14,6 +16,8 @@ public interface ProductService {
 	void deleteProdcuct(String id);
 
 	List<Product> findAllProducts();
+	
+	List<Product> findAllProducts(int page, int size);
 	
 	List<Product> findAllProductsBySupplierId(String supplierId);
 
