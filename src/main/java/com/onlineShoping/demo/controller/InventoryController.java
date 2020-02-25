@@ -11,7 +11,7 @@ import com.onlineShoping.demo.entity.Inventory;
 import com.onlineShoping.demo.service.InventoryService;
 
 @RestController
-@RequestMapping(path = { "/api/inventory" })
+@RequestMapping(path = {"/api/inventory"})
 public class InventoryController {
 
 	@Autowired
@@ -26,7 +26,10 @@ public class InventoryController {
 		return inventoryService.getProductQuantity();
 	}
 
-	
+	@GetMapping(path = {"store-products"})
+	public List<Inventory> getStroreProducts() {
+		return null;
+	}
 
 	private List<Inventory> zeroItemInvetory() {
 		return null;

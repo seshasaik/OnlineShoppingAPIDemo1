@@ -86,4 +86,10 @@ public class InventoryServiceImpl implements InventoryService {
 
 	}
 
+	@Override
+	public List<Inventory> getStoreProudcts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

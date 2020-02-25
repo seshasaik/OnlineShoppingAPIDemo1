@@ -13,6 +13,8 @@ public interface InventoryService {
 	
 	List<Inventory> getProductQuantity();
 	
+	List<Inventory> getStoreProudcts();
+	
 	void getZeroBasedProductQuantity();
 
 }

@@ -17,6 +17,7 @@ public class Product {
 	private List<ProductFeature> features;
 	private List<Supplier> suppliers;
 	private ProductStatus status;
+	
 
 	public String getId() {
 		return id;
